@@ -1,5 +1,6 @@
 package com.corndel.supportbank;
 
+import com.corndel.supportbank.Controllers.TransactionController;
 import com.github.tomaslanger.chalk.Chalk;
 import picocli.CommandLine.Command;
 import picocli.CommandLine;
@@ -7,7 +8,7 @@ import com.corndel.supportbank.Controllers.BillController;
 
 import java.util.Arrays;
 
-@Command(name = "supportbank", subcommands = {BillController.class})
+@Command(name = "supportbank", subcommands = {BillController.class, TransactionController.class})
 public class SupportBank {
 
   public static void main(String[] args) {
