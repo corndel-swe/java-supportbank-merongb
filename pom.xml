@@ -17,6 +17,16 @@
     <!-- https://tech-docs.corndel.com/java/making-a-cli.html#installing-picocli -->
 
     <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+      <version>4.7.6</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tomas-langer</groupId>
+      <artifactId>chalk</artifactId>
+      <version>1.0.2</version>
+    </dependency>
+    <dependency>
       <groupId>com.konghq</groupId>
       <artifactId>unirest-java</artifactId>
       <version>3.13.10</version>
