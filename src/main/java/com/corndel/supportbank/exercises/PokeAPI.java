@@ -1,8 +1,12 @@
 package com.corndel.supportbank.exercises;
-
  import kong.unirest.Unirest;
 
  import com.fasterxml.jackson.databind.ObjectMapper;
+
+// import kong.unirest.Unirest;
+
+// import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
@@ -27,6 +31,7 @@ public class PokeAPI {
    */
   public static Pokemon getPokemonByName(String name) throws Exception {
     // TODO: Create the url by appending the name to the base url
+
 String url = "https://pokeapi.co/api/v2/pokemon/pikachu";
     // TODO: Make a GET request to the url
     // Hint: Use Unirest.get()
@@ -40,6 +45,17 @@ String url = "https://pokeapi.co/api/v2/pokemon/pikachu";
     Pokemon pokemon = mapper.readValue(json, Pokemon.class);
     // TODO: Return the Pokemon
     return pokemon;
+
+
+    // TODO: Make a GET request to the url
+    // Hint: Use Unirest.get()
+
+    // TODO: Parse the response body into a Pokemon object
+    // Hint: Use Jackson's ObjectMapper to map the response body to Pokemon.class
+
+    // TODO: Return the Pokemon
+
+
   }
 
   /**

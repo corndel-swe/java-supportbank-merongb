@@ -27,4 +27,7 @@ buildNumber.properties
 /out/
 .DS_Store
 src/.DS_Store
+<<<<<<< HEAD
 .env
+=======
+>>>>>>> 1c3fb725b0bd9df8469fe78c8dd9a4e7a89fb55c
