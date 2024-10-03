@@ -1,8 +1,13 @@
 package com.corndel.supportbank.Services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.cdimascio.dotenv.Dotenv;
+import kong.unirest.Unirest;
 import picocli.CommandLine;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Command;
+
+import java.sql.SQLOutput;
 
 @Command(name = "Convert")
 public class Converter implements Runnable{
@@ -18,7 +23,12 @@ public class Converter implements Runnable{
 
         @Override
         public void run() {
-            double convertedAmount = convertCurrency(amount, fromCurrency, toCurrency);
+            double convertedAmount = 0;
+            try {
+                convertedAmount = convertCurrency(amount, fromCurrency, toCurrency);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             if (convertedAmount == -1) {
                 System.out.println("Error: Invalid currency specified.");
             } else {
@@ -27,27 +37,34 @@ public class Converter implements Runnable{
             }
         }
 
-        private double convertCurrency(double amount, String fromCurrency, String toCurrency) {
+        private double convertCurrency(double amount, String fromCurrency, String toCurrency) throws Exception{
 
-            double rate = 0.0;
+            Dotenv dotenv = Dotenv.load();
+            String ApiKey = dotenv.get("OPEN_EXCHANGE_RATES_APP_ID");
 
-            //  conversion rates
-            if ("USD".equals(fromCurrency) && "GBP".equals(toCurrency)) {
-                rate = 0.75;
-            } else if ("GBP".equals(fromCurrency) && "USD".equals(toCurrency)) {
-                rate = 1.33;
-            } else if ("USD".equals(fromCurrency) && "EUR".equals(toCurrency)) {
-                rate = 0.85;
-            } else if ("EUR".equals(fromCurrency) && "USD".equals(toCurrency)) {
-                rate = 1.18;
-            } else if ("GBP".equals(fromCurrency) && "EUR".equals(toCurrency)) {
-                rate = 1.17;
-            } else if ("EUR".equals(fromCurrency) && "GBP".equals(toCurrency)) {
-                rate = 0.85;
-            } else {
-                return -1;
+            String url = String.format("https://openexchangerates.org/api/latest.json?app_id=%s", ApiKey);
+
+            var response = Unirest
+                    .get(url)
+                    .header("Accept", "application/json")
+                    .asString();
+
+            String json = response.getBody();
+
+            ObjectMapper mapper = new ObjectMapper();
+            var tree = mapper.readTree(json);
+
+            if (tree.get("rates").get(fromCurrency) == null || tree.get("rates").get(toCurrency) == null) {
+                throw new Exception("Currency does not exist");
             }
 
-            return amount * rate;
+            double fromConversion = tree.get("rates")
+                    .get(fromCurrency).asDouble();
+
+            double toConversion = tree.get("rates")
+                    .get(toCurrency).asDouble();
+
+
+  return (amount / fromConversion) * toConversion;
         }
     }
